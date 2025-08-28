@@ -4,5 +4,11 @@
     "title": "Verity",
     "author": "Colleen Hoover",
     "coverUrl": "/Books/Verity/cover.jpg"
+  },
+    {
+    "id": "The Murder of Roger Ackroyd",
+    "title": "The Murder of Roger Ackroyd",
+    "author": "Agatha Christie",
+    "coverUrl": "/Books/The Murder of Roger Ackroyd/cover.jpg"
   }
 ]

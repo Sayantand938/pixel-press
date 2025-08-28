@@ -1,0 +1,21 @@
+{
+  "title": "The Murder of Roger Ackroyd",
+  "author": "Agatha Christie",
+  "chapters": [
+    {
+      "number": 1,
+      "title": "Dr. Sheppard at the breakfast table",
+      "file": "1.md"
+    },
+    {
+      "number": 2,
+      "title": "King's Abbot: The Cast of Characters",
+      "file": "2.md"
+    },    
+    {
+      "number": 3,
+      "title": "The Man Who Grew Vegetable Marrows",
+      "file": "3.md"
+    }
+  ]
+}
