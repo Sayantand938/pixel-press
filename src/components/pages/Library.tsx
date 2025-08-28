@@ -60,8 +60,9 @@ export function Library() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8 relative">
-        <h1 className="text-5xl font-bold tracking-tight">Pixel Press</h1>
-        <p className="text-muted-foreground mt-2 text-lg">Your premium destination for digital reading.</p>
+        {/* MODIFIED: Made header font size responsive */}
+        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">Pixel Press</h1>
+        <p className="text-muted-foreground mt-2 text-base md:text-lg">Your premium destination for digital reading.</p>
         <div className="absolute top-0 right-0">
           <Button onClick={toggleTheme} variant="ghost" size="icon">
             <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -84,13 +85,13 @@ export function Library() {
       {error && <p className="text-center text-destructive">Error fetching library: {error.message}</p>}
 
       <motion.div 
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+        /* MODIFIED: Made grid gap responsive */
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {filteredBooks?.map((book) => (
-          // FIXED: Removed card padding (p-0) and border (border-0) to allow the image to fill the container.
           <MotionCard 
             key={book.id} 
             className="overflow-hidden rounded-lg shadow-md p-0 border-0"

@@ -98,20 +98,21 @@ export function BookReader() {
       variants={pageVariants}
     >
       <div className="flex justify-between items-center mb-4">
-        <Button asChild variant="link" className="p-0 text-base">
+        {/* MODIFIED: Made font size responsive */}
+        <Button asChild variant="link" className="p-0 text-sm md:text-base">
           <Link to="/books/$bookId" params={{ bookId }}>&larr; Back to Chapters</Link>
         </Button>
-        <Button asChild variant="link" className="p-0 text-base">
+        {/* MODIFIED: Made font size responsive */}
+        <Button asChild variant="link" className="p-0 text-sm md:text-base">
           <Link to="/">&larr; Back to Library</Link>
         </Button>
       </div>
 
       <header className="mb-8 border-b pb-4 text-center">
         <h1 className="text-2xl text-muted-foreground">{metadata.title}</h1>
-        <h2 className="text-4xl font-bold tracking-tight">{chapter.title}</h2>
+        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{chapter.title}</h2>
       </header>
 
-      {/* --- THIS IS THE LINE TO CHANGE --- */}
       <article className="text-lg md:text-xl leading-relaxed [&_p]:mb-6">
         {isChapterLoading && <p>Loading content...</p>}
         {chapterError && <p className="text-destructive">Error loading chapter content: {chapterError.message}</p>}
@@ -119,7 +120,7 @@ export function BookReader() {
       </article>
 
       <footer className="mt-8 pt-4 border-t flex justify-between items-center">
-        <MotionButton asChild disabled={!prevChapter}>
+        <MotionButton asChild disabled={!prevChapter} size="sm" className="md:size-auto">
           <Link
             to="/books/$bookId/chapter/$chapterNumber"
             params={{ bookId, chapterNumber: String(prevChapter?.number || '') }}
@@ -128,10 +129,10 @@ export function BookReader() {
             Previous
           </Link>
         </MotionButton>
-        <span className="text-muted-foreground">
+        <span className="text-sm text-muted-foreground md:text-base">
           Chapter {currentChapterNum} of {metadata.chapters.length}
         </span>
-        <MotionButton asChild disabled={!nextChapter}>
+        <MotionButton asChild disabled={!nextChapter} size="sm" className="md:size-auto">
           <Link
             to="/books/$bookId/chapter/$chapterNumber"
             params={{ bookId, chapterNumber: String(nextChapter?.number || '') }}

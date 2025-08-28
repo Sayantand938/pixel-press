@@ -58,12 +58,13 @@ export function BookTOC() {
    variants={pageVariants}
   >
    <div>
-    <Button asChild variant="link" className="p-0 mb-4 text-base">
+    {/* MODIFIED: Made font size responsive */}
+    <Button asChild variant="link" className="p-0 mb-4 text-sm md:text-base">
      <Link to="/">&larr; Back to Library</Link>
     </Button>
    </div>
 
-   <div className="grid md:grid-cols-3 gap-8">
+   <div className="grid md:grid-cols-3 gap-6 md:gap-8">
     <div className="md:col-span-1">
      <img 
       src={metadata?.coverUrl} 
@@ -75,8 +76,8 @@ export function BookTOC() {
     <div className="md:col-span-2">
      <Card className="bg-card/50">
       <CardHeader>
-       <CardTitle className="text-4xl font-bold">{metadata?.title}</CardTitle>
-       <CardDescription className="text-lg">by {metadata?.author}</CardDescription>
+       <CardTitle className="text-3xl font-bold md:text-4xl">{metadata?.title}</CardTitle>
+       <CardDescription className="text-base md:text-lg">by {metadata?.author}</CardDescription>
       </CardHeader>
       <CardContent>
        <h3 className="text-2xl font-semibold mb-4 border-b pb-2">Chapters</h3>
