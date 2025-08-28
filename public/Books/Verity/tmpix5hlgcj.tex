@@ -1,0 +1,13 @@
+\usepackage{setspace}
+\setstretch{1.15}
+
+\usepackage{ifoddpage}
+\newcommand{\cleartooddpage}{%
+  \clearpage
+  \checkoddpage
+  \ifoddpage\else
+    \hbox{}%
+    \thispagestyle{empty}%
+    \newpage
+  \fi
+}
