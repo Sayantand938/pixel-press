@@ -3,10 +3,11 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from '@tanstack/react-router';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion'; // <-- Import for values
-import type { Variants } from 'framer-motion'; // <-- Type-only import
+import { motion } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 const MotionButton = motion(Button);
 
@@ -100,7 +101,7 @@ export function BookReader() {
   
   if (!metadata || !chapter || typeof currentIndex !== 'number' || currentIndex < 0) {
     return (
-      <div className="container mx-auto max-w-3xl p-4 md:p-8 text-center">
+      <div className="container mx-auto max-w-4xl p-4 md:p-8 text-center">
         <h2 className="text-2xl font-bold">Chapter Not Found</h2>
         <p className="mt-2 text-muted-foreground">Chapter {currentChapterNum} does not exist.</p>
         <Button asChild variant="link" className="mt-4 text-base">
@@ -115,7 +116,7 @@ export function BookReader() {
 
   return (
     <motion.div 
-      className="container mx-auto max-w-3xl p-4 md:p-8"
+      className="container mx-auto max-w-4xl p-4 md:p-8"
       key={currentChapterNum}
       initial="hidden"
       animate="visible"
@@ -142,23 +143,25 @@ export function BookReader() {
       </article>
 
       <footer className="mt-8 pt-4 border-t flex justify-between items-center">
-        <MotionButton asChild disabled={!prevChapter} size="sm" className="md:size-auto">
+        <MotionButton asChild disabled={!prevChapter} className="w-20 sm:w-24">
           <Link
             to="/books/$bookId/chapter/$chapterNumber"
             params={{ bookId, chapterNumber: String(prevChapter?.number || '') }}
-            disabled={!prevChapter}
+            className={cn('inline-block text-center', { 'opacity-50 pointer-events-none': !prevChapter })}
           >
             Previous
           </Link>
         </MotionButton>
+
         <span className="text-sm text-muted-foreground md:text-base">
           Chapter {currentChapterNum} of {metadata.chapters.length}
         </span>
-        <MotionButton asChild disabled={!nextChapter} size="sm" className="md:size-auto">
+
+        <MotionButton asChild disabled={!nextChapter} className="w-20 sm:w-24">
           <Link
             to="/books/$bookId/chapter/$chapterNumber"
             params={{ bookId, chapterNumber: String(nextChapter?.number || '') }}
-            disabled={!nextChapter}
+            className={cn('inline-block text-center', { 'opacity-50 pointer-events-none': !nextChapter })}
           >
             Next
           </Link>
