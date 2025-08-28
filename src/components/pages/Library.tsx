@@ -6,9 +6,10 @@ import { Sun, Moon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton'; // 1. Import Skeleton
 import { useThemeStore } from '@/store/themeStore';
+import { useState } from 'react';
 
-// Convert the static Card component into an animatable one
 const MotionCard = motion(Card);
 
 interface Book {
@@ -28,22 +29,46 @@ const fetchBooks = async (): Promise<Book[]> => {
   return response.json();
 };
 
-// Animation variants for the container to orchestrate the staggered animation
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
 
-// Animation variants for each book card - simplified to a simple fade-in
 const cardVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 };
+
+// 2. NEW BookCard component to manage its own image loading state
+function BookCard({ book }: { book: Book }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <MotionCard
+      className="overflow-hidden rounded-lg shadow-md p-0 border-0 relative"
+      variants={cardVariants}
+    >
+      <Link to="/books/$bookId" params={{ bookId: book.id }} className="relative block w-full h-full">
+        {/* Skeleton placeholder, shown until the image is loaded */}
+        {!isLoaded && <Skeleton className="w-full h-full aspect-[2/3] absolute" />}
+
+        <img
+          src={book.coverUrl}
+          alt={`Cover of ${book.title}`}
+          loading="lazy" // Native browser lazy loading
+          onLoad={() => setIsLoaded(true)} // Fade in image on load
+          className={`w-full h-full object-cover aspect-[2/3] transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        />
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 p-4 w-full">
+          <h3 className="text-lg font-bold text-white truncate">{book.title}</h3>
+          <p className="text-sm text-white/80">{book.author}</p>
+        </div>
+      </Link>
+    </MotionCard>
+  );
+}
 
 export function Library() {
   const { register, watch } = useForm<SearchForm>({ defaultValues: { searchQuery: '' } });
@@ -60,7 +85,6 @@ export function Library() {
   return (
     <div className="container mx-auto p-4 md:p-8">
       <header className="text-center mb-8 relative">
-        {/* MODIFIED: Made header font size responsive */}
         <h1 className="text-4xl font-bold tracking-tight md:text-5xl">Pixel Press</h1>
         <p className="text-muted-foreground mt-2 text-base md:text-lg">Your premium destination for digital reading.</p>
         <div className="absolute top-0 right-0">
@@ -81,36 +105,22 @@ export function Library() {
         />
       </div>
 
-      {isLoading && <p className="text-center">Loading library...</p>}
       {error && <p className="text-center text-destructive">Error fetching library: {error.message}</p>}
 
       <motion.div 
-        /* MODIFIED: Made grid gap responsive */
         className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {filteredBooks?.map((book) => (
-          <MotionCard 
-            key={book.id} 
-            className="overflow-hidden rounded-lg shadow-md p-0 border-0"
-            variants={cardVariants}
-          >
-            <Link to="/books/$bookId" params={{ bookId: book.id }} className="relative block w-full h-full">
-              <img
-                src={book.coverUrl}
-                alt={`Cover of ${book.title}`}
-                className="w-full h-full object-cover aspect-[2/3]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-4 w-full">
-                <h3 className="text-lg font-bold text-white truncate">{book.title}</h3>
-                <p className="text-sm text-white/80">{book.author}</p>
-              </div>
-            </Link>
-          </MotionCard>
-        ))}
+        {/* 3. MODIFIED: Show skeleton grid while loading */}
+        {isLoading ? (
+          Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} className="w-full aspect-[2/3] rounded-lg" />
+          ))
+        ) : (
+          filteredBooks?.map((book) => <BookCard key={book.id} book={book} />)
+        )}
       </motion.div>
     </div>
   );

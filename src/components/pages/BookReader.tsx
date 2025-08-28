@@ -3,8 +3,10 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from '@tanstack/react-router';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; // <-- Import for values
+import type { Variants } from 'framer-motion'; // <-- Type-only import
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const MotionButton = motion(Button);
 
@@ -32,7 +34,7 @@ const fetchChapterContent = async (bookId: string, filePath: string): Promise<st
   return response.text();
 };
 
-const pageVariants = {
+const pageVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -41,7 +43,29 @@ const pageVariants = {
       ease: "easeInOut",
     },
   },
-} as const;
+};
+
+function ContentLoader() {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-5 w-5/6" />
+      </div>
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-5 w-1/2" />
+      </div>
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-5 w-3/4" />
+      </div>
+    </div>
+  );
+}
 
 export function BookReader() {
   const { bookId, chapterNumber } = useParams({ from: '/books/$bookId/chapter/$chapterNumber' });
@@ -98,11 +122,9 @@ export function BookReader() {
       variants={pageVariants}
     >
       <div className="flex justify-between items-center mb-4">
-        {/* MODIFIED: Made font size responsive */}
         <Button asChild variant="link" className="p-0 text-sm md:text-base">
           <Link to="/books/$bookId" params={{ bookId }}>&larr; Back to Chapters</Link>
         </Button>
-        {/* MODIFIED: Made font size responsive */}
         <Button asChild variant="link" className="p-0 text-sm md:text-base">
           <Link to="/">&larr; Back to Library</Link>
         </Button>
@@ -112,9 +134,9 @@ export function BookReader() {
         <h1 className="text-2xl text-muted-foreground">{metadata.title}</h1>
         <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{chapter.title}</h2>
       </header>
-
+      
       <article className="text-lg md:text-xl leading-relaxed [&_p]:mb-6">
-        {isChapterLoading && <p>Loading content...</p>}
+        {isChapterLoading && <ContentLoader />}
         {chapterError && <p className="text-destructive">Error loading chapter content: {chapterError.message}</p>}
         {chapterContent && <ReactMarkdown>{chapterContent}</ReactMarkdown>}
       </article>
